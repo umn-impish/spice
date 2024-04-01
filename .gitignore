@@ -1,2 +1,5 @@
+*.op.raw
+*.raw
+*.log
 __pycache__/
 helpers/pwl/
