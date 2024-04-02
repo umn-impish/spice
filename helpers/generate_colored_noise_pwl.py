@@ -13,16 +13,10 @@ def noise(
     max_val: u.Quantity,
     duration: u.Quantity,
     time_step: u.Quantity,
-) -> tuple[u.Quantity, u.Quantity]:
-    
-    color = color.lower()
-    try:
-        color_func = ngen.COLORS[color]
-    except KeyError as e:
-        raise ValueError(
-            f'Noise color \'{color}\' not supported. '
-            f'Try the following {list(ngen.COLORS.keys())} or add your own.'
-        )
+) -> tuple[
+    u.Quantity, u.Quantity
+]:
+    color_func = ngen.COLORS[color.lower()]
 
     time_step = time_step << duration.unit
     nsamples = int( duration / time_step )
@@ -34,7 +28,6 @@ def noise(
 
 
 def main():
-
     parser = argparse.ArgumentParser(
         description='Generates a PWL file of colored noise for use in LTSpice\'s PWL voltage source.',
         epilog='Example of use: python generate_noise_pwl.py --col white --min -1 --max 1 --dur 1 --step 1e-3'
