@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools >= 61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+version = "0"
+name = "spicy_grips"
+dependencies = [
+    "matplotlib",
+    "numpy",
+    "scipy"
+]
+
+[project.scripts]
+gen-sipm-noise = "spicy_grips.generate_sipm_noise:main"
+gen-colored-noise = "spicy_grips.generate_colored_noise_pwl:main"
+gen-transients = "spicy_grips.generate_transient_spike_pwl:main"
