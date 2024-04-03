@@ -15,13 +15,6 @@ def write_file(times: u.Quantity, values: u.Quantity, file_name: str):
     np.savetxt(os.path.join(OUT_DIR, file_name), cols)
 
 
-def PWLGenerator(func):
-    def wrapped(*args):
-        write_file(*func(*args), file_name=f'{func.__name__}.pwl')
-        
-    return wrapped
-
-
 def normalize_to_range(values: np.ndarray, range: tuple[float, float]) -> np.ndarray:
     """
     Renormalizes given values to the specified range (min, max).

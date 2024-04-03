@@ -57,7 +57,7 @@ def arbitrary_noise_gen(frequencies: u.Hz, psd: (u.one / u.Hz**0.5), time_step: 
     :return: Function wrapped with `PSDGenerator`
     :rtype: Callable
     """    ''''''
-    def wrap(f):
+    def sipm_resampled_noise(f):
         return np.interp(
             f / time_step.to_value(u.s),
             frequencies.to_value(u.Hz),
@@ -65,7 +65,7 @@ def arbitrary_noise_gen(frequencies: u.Hz, psd: (u.one / u.Hz**0.5), time_step: 
             left=0,
             right=0
         )
-    return PSDGenerator(wrap)
+    return PSDGenerator(sipm_resampled_noise)
 
 
 

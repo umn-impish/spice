@@ -3,10 +3,9 @@ import astropy.units as u
 import numpy as np
 import random
 
-import pwl_helpers as helpers
+from . import pwl_helpers as helpers
 
 
-@helpers.PWLGenerator
 def transient_spikes(
     duration: u.Quantity,
     amplitude: u.Quantity,
@@ -37,19 +36,23 @@ def transient_spikes(
     times = helpers.weave_arrays(starts, mids, ends, dtype=starts.dtype)
     voltages = helpers.weave_arrays(zeros, amplitudes, zeros, dtype=amplitudes.dtype)
 
-    return times, voltages
+    helpers.write_file(times, voltages, 'transient_spikes.pwl')
 
 
 def main():
-    
     parser = argparse.ArgumentParser(
         description='Generates a PWL file containing transient voltage spikes for use in LTSpice\'s PWL voltage source.',
-        epilog='Example of use: python generate_transient_spike_pwl.py --dur 1e-2 --amp 2 --wid 1e-9 --num 1000'
     )
-    parser.add_argument('--dur', type=float, help='simulation duration, in seconds')
-    parser.add_argument('--amp', type=float, help='max transient amplitude, in volts')
-    parser.add_argument('--wid', type=float, default=1e-9, help='[optional] transient pulse width, in seconds')
-    parser.add_argument('--num', type=int, default=None, help='[optional] number of transient spikes')
+    parser.add_argument(
+        '--dur', type=float, help='simulation duration, in seconds', required=True)
+    parser.add_argument(
+        '--amp', type=float, help='max transient amplitude, in volts', required=True)
+    parser.add_argument(
+        '--wid', type=float, default=1e-9, help='transient pulse width, in seconds',
+        required=False)
+    parser.add_argument(
+        '--num', type=int, default=None, help='number of transient spikes',
+        required=False)
 
     arg = parser.parse_args()
     transient_spikes(

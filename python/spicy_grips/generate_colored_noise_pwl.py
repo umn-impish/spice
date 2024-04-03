@@ -1,30 +1,10 @@
 import argparse
+from typing import Callable
 import astropy.units as u
 import numpy as np
 
-import pwl_helpers as helpers
-import noise_generators as ngen
-
-
-@helpers.PWLGenerator
-def noise(
-    color: str,
-    min_val: u.Quantity,
-    max_val: u.Quantity,
-    duration: u.Quantity,
-    time_step: u.Quantity,
-) -> tuple[
-    u.Quantity, u.Quantity
-]:
-    color_func = ngen.COLORS[color.lower()]
-
-    time_step = time_step << duration.unit
-    nsamples = int( duration / time_step )
-    times = np.arange(0, duration.value, time_step.value)[:nsamples] << time_step.unit
-    values = color_func(nsamples)
-    values = helpers.normalize_to_range(values, (min_val, max_val))
-
-    return times, values
+from . import noise_generators as ngen
+from . import generate_pwl_noise as gpn
 
 
 def main():
@@ -45,12 +25,13 @@ def main():
         '--step', type=float, help='time step, in seconds', required=True)
     
     arg = parser.parse_args()
-    noise(
-        arg.col,
+    gpn.noise(
+        ngen.COLORS[arg.col.lower()],
         arg.min << u.volt,
         arg.max << u.volt,
         arg.dur << u.second,
-        arg.step << u.second
+        arg.step << u.second,
+        name=arg.col.lower()
     )
 
 
